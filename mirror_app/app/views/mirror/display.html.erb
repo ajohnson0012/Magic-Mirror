@@ -1,0 +1,273 @@
+<html>
+<head>
+  <div id="top">
+    <h1><span id="time">Time</span></h1>
+    <h2 id="date">Date</h2>
+    <h2 id="currentWeather">Current Weather</h2>
+    <img id="currentIcon" alt="currentIcon">
+  </div>
+  <script>
+  var times = new Date();
+  var hour = times.getHours();
+  var minute = times.getMinutes();
+  if(hour>12){
+		hour = hour - 12;
+	}
+	else if (hour===0){
+		hour = 12;
+	}
+  if(minute<10){
+    minute = "0" + minute
+  }
+  var hm = hour + ":" + minute;
+  var day = times.getDay();
+  switch(day){
+    case 0:
+    day = "Sunday";
+    break;
+    case 1:
+    day = "Monday";
+    break;
+    case 2:
+    day = "Tuesday";
+    break;
+    case 3:
+    day = "Wednesday";
+    break;
+    case 4:
+    day = "Thursday";
+    break;
+    case 5:
+    day = "Friday";
+    break;
+    case 6:
+    day = "Saturday";
+    break;
+  }
+  var month = times.getMonth();
+  switch(month){
+    case 0:
+		month = "January";
+		break;
+		case 1:
+		month = "February";
+		break;
+		case 1:
+		month = "March";
+		break;
+		case 3:
+		month = "April";
+		break;
+		case 4:
+		month = "May";
+		break;
+		case 5:
+		month = "June";
+		break;
+		case 6:
+		month = "July";
+		break;
+		case 7:
+		month = "August";
+		break;
+		case 8:
+		month = "September";
+		break;
+		case 9:
+		month = "October";
+		break;
+		case 10:
+		month = "November";
+		break;
+		case 11:
+		month = "December";
+		break;
+  }
+  var date = times.getDate();
+  var year = times.getFullYear();
+  var fullDate = day + ", " + month + " " + date + " " + year;
+  document.getElementById("time").innerHTML = hm;
+  document.getElementById("date").innerHTML = fullDate;
+  </script>
+</head>
+<body>
+  <div id="leftSide">
+    <div id="myReminders">
+      <h4>Reminders</h4>
+    </div>
+  </div>
+  <div id="rightSide">
+    <div id="location">
+      <h4 id="place">City, State</h4>
+    </div>
+    <div id="weather">
+      <table id="todayWeather">
+        <h5>12 Hour Forecast</h5>
+        <tr>
+          <td id="todayTime0">Tomorrow</td>
+          <td><img id="todayIcon0" alt="icon"></td>
+          <td id="todayTemp0">temp</td>
+        </tr>
+        <tr>
+          <td id="todayTime1">Tomorrow</td>
+          <td><img id="todayIcon1" alt="icon"></td>
+          <td id="todayTemp1">temp</td>
+        </tr>
+        <tr>
+          <td id="todayTime2">Tomorrow</td>
+          <td><img id="todayIcon2" alt="icon"></td>
+          <td id="todayTemp2">temp</td>
+        </tr>
+        <tr>
+          <td id="todayTime3">Tomorrow</td>
+          <td><img id="todayIcon3" alt="icon"></td>
+          <td id="todayTemp3">temp</td>
+        </tr>
+        <tr>
+          <td id="todayTime4">Tomorrow</td>
+          <td><img id="todayIcon4" alt="icon"></td>
+          <td id="todayTemp4">temp</td>
+        </tr>
+      </table><br>
+      <table id="weekWeather">
+        <h5>4 Day Forecast</h5>
+        <tr>
+          <td id="weekDay1">Tomorrow</td>
+          <td><img id="weekIcon1" alt="icon"></td>
+          <td id="weekHigh1" class="high">high</td>
+          <td id="weekLow1" class="low">low</td>
+        </tr>
+        <tr>
+          <td id="weekDay2">2 Days</td>
+          <td><img id="weekIcon2" alt="icon"></td>
+          <td id="weekHigh2" class="high">high</td>
+          <td id="weekLow2" class="low">low</td>
+        </tr>
+        <tr>
+          <td id="weekDay3">3 days</td>
+          <td><img id="weekIcon3" alt="icon"></td>
+          <td id="weekHigh3" class="high">high</td>
+          <td id="weekLow3" class="low">low</td>
+        </tr>
+        <tr>
+          <td id="weekDay4">4 days</td>
+          <td><img id="weekIcon4" alt="icon"></td>
+          <td id="weekHigh4" class="high">high</td>
+          <td id="weekLow4" class="low">low</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <script>
+    function getWeather(city, code) {
+      var appID = "f94b7617ae1f162059f124c32e102e2b";
+      var link = "http://api.openweathermap.org/data/2.5/forecast?q="+city+","+code+"&units=imperial&appid="+appID;
+      $.get(link, function(weather) {
+        var currentTemp = Math.round(weather.list[0].main.temp)+"° F";
+        var currentIcon = "http://openweathermap.org/img/w/"+weather.list[0].weather[0].icon+".png";
+        var currentDes = (weather.list[0].weather[0].description);
+        document.getElementById("currentWeather").innerHTML = currentTemp+" "+currentDes;
+        document.getElementById("currentIcon").src = currentIcon;
+        var i = 1;
+        for(i=0;i<5;i++) {
+          var todayTimes = new Date(1000*weather.list[i].dt);
+          var todayHour = todayTimes.getHours();
+          var todayPeriod;
+          if(todayHour>12) {
+            todayHour = todayHour - 12;
+  					todayPeriod = "pm";
+				  }
+				  else if (todayHour===0){
+            todayHour = 12;
+  					todayPeriod = "am";
+				  }
+				  else if(todayHour===12) {
+					  todayPeriod = "pm"
+				  }
+				  else{
+					  todayPeriod = "am";
+				  }
+          var todayTime = todayHour + ":00 " + todayPeriod;
+          var todayIcon = "http://openweathermap.org/img/w/"+weather.list[i].weather[0].icon+".png";
+          var todayTemp = Math.round(weather.list[i].main.temp)+"° F";
+          //var todayWind = weather.list[i].wind.speed);
+          document.getElementById("todayTime"+i).innerHTML = todayTime;
+          document.getElementById("todayIcon"+i).src = todayIcon;
+          document.getElementById("todayTemp"+i).innerHTML = todayTemp;
+        }
+        for(i=1;i<5;i++) {
+          var todayTimes = new Date(1000*weather.list[0].dt);
+          var today = todayTimes.getDay();
+          var j=1;
+          do {
+            var tomorrowTimes = new Date(1000*weather.list[j].dt);
+            var tomorrowDay = tomorrowTimes.getDay();
+            j++;
+          } while(tomorrowDay!=((today+i)%7));
+          var weekHigh = weather.list[j].main.temp_max;
+          var weekLow = weather.list[j].main.temp_min;
+          var weekIcon = weather.list[j].weather[0].icon;
+          /*while(tomorrowDay!=((today+i+1)%7)) {
+            j++;
+            tomorrowTimes = new Date(1000*weather.list[j].dt);
+            tomorrowDay = tomorrowTimes.getDay;
+          }*/
+          //document.getElementById("weekDay2").innerHTML = "works";
+          var k;
+          for(k=1;k<8;k++) {
+            if(weekHigh<=weather.list[j+k].main.temp_max) {
+              weekHigh = weather.list[j+k].main.temp_max;
+              weekIcon = weather.list[j+k].weather[0].icon;
+            }
+            if(weekLow>weather.list[j+k].main.temp_min) {
+              weekLow = weather.list[j+k].main.temp_min;
+            }
+          }
+          switch(tomorrowDay){
+            case 0:
+            tomorrowDay = "Sunday";
+            break;
+            case 1:
+            tomorrowDay = "Monday";
+            break;
+            case 2:
+            tomorrowDay = "Tuesday";
+            break;
+            case 3:
+            tomorrowDay = "Wednesday";
+            break;
+            case 4:
+            tomorrowDay = "Thursday";
+            break;
+            case 5:
+            tomorrowDay = "Friday";
+            break;
+            case 6:
+            tomorrowDay = "Saturday";
+            break;
+          }
+          var weekDay = tomorrowDay;
+          var weekIcon = "http://openweathermap.org/img/w/"+weekIcon+".png";
+          var weekHigh = Math.round(weekHigh)+"° F ";
+          var weekLow = Math.round(weekLow)+"° F";
+          document.getElementById("weekDay"+i).innerHTML = weekDay;
+          document.getElementById("weekIcon"+i).src = weekIcon;
+          document.getElementById("weekHigh"+i).innerHTML = weekHigh;
+          document.getElementById("weekLow"+i).innerHTML = weekLow;
+        }
+      }, "jsonp");
+    };
+  </script>
+  <script>
+    $.get("http://ipinfo.io", function(response) {
+      var appID = "f94b7617ae1f162059f124c32e102e2b";
+      var city = response.city;
+      var state = response.region;
+      var place = city + ", " + state;
+      document.getElementById("place").innerHTML = place;
+      var code = response.country;
+      getWeather(city, code);
+    }, "jsonp");
+  </script>
+</body>
+</html>
