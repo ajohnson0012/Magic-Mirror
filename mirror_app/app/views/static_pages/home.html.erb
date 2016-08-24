@@ -1,0 +1,17 @@
+<% provide(:title, "Home") %>
+<%= render 'layouts/header' %>
+<head>
+  <div id="home">
+    <h1>Welcome to the home page for the Mirror App!</h1>
+    
+    <div id="login">
+      <button><%= link_to "LOGIN", login_path %></button>
+      <button><%= link_to "SIGNUP", signup_path %></button>
+    </div>
+    
+    <div id="mirrorLink">
+      <button><%= link_to "GO TO DISPLAY", display_path %></button>
+    </div>
+    
+  </div>
+</head>

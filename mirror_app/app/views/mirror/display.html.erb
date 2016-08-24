@@ -1,99 +1,75 @@
+<%= provide(:title, "Display") %>
 <html>
 <head>
   <div id="top">
-    <h1><span id="time">Time</span></h1>
-    <h2 id="date">Date</h2>
+    <h1><a href="http://localhost:3000" id="time">Time</a></h1>
+    <h2 id="date"><%= link_to "Date", root_path %></h2>
     <h2 id="currentWeather">Current Weather</h2>
     <img id="currentIcon" alt="currentIcon">
   </div>
-  <script>
-  var times = new Date();
-  var hour = times.getHours();
-  var minute = times.getMinutes();
-  if(hour>12){
-		hour = hour - 12;
-	}
-	else if (hour===0){
-		hour = 12;
-	}
-  if(minute<10){
-    minute = "0" + minute
-  }
-  var hm = hour + ":" + minute;
-  var day = times.getDay();
-  switch(day){
-    case 0:
-    day = "Sunday";
-    break;
-    case 1:
-    day = "Monday";
-    break;
-    case 2:
-    day = "Tuesday";
-    break;
-    case 3:
-    day = "Wednesday";
-    break;
-    case 4:
-    day = "Thursday";
-    break;
-    case 5:
-    day = "Friday";
-    break;
-    case 6:
-    day = "Saturday";
-    break;
-  }
-  var month = times.getMonth();
-  switch(month){
-    case 0:
-		month = "January";
-		break;
-		case 1:
-		month = "February";
-		break;
-		case 1:
-		month = "March";
-		break;
-		case 3:
-		month = "April";
-		break;
-		case 4:
-		month = "May";
-		break;
-		case 5:
-		month = "June";
-		break;
-		case 6:
-		month = "July";
-		break;
-		case 7:
-		month = "August";
-		break;
-		case 8:
-		month = "September";
-		break;
-		case 9:
-		month = "October";
-		break;
-		case 10:
-		month = "November";
-		break;
-		case 11:
-		month = "December";
-		break;
-  }
-  var date = times.getDate();
-  var year = times.getFullYear();
-  var fullDate = day + ", " + month + " " + date + " " + year;
-  document.getElementById("time").innerHTML = hm;
-  document.getElementById("date").innerHTML = fullDate;
-  </script>
 </head>
-<body>
-  <div id="leftSide">
+<body class="black">
+  <div id="leftSide" class="pull-left">
     <div id="myReminders">
-      <h4>Reminders</h4>
+      <h4 id="eventsLabel">Upcoming Events</h4>
+      <div id="authorize-div" style="display: none">
+        <span>Authorize access to Google Calendar API</span>
+        <button id="authorize-button" onclick="handleAuthClick(event)">
+          Authorize
+        </button>
+      </div>
+      <table id="schedule">
+        <tr>
+          <td id="day1"></td>
+          <td id="time1" class="evTime"></td>
+          <td id="event1" class="summary"></td>
+        </tr>
+        <tr>
+          <td id="day2"></td>
+          <td id="time2" class="evTime"></td>
+          <td id="event2" class="summary"></td>
+        </tr>
+        <tr>
+          <td id="day3"></td>
+          <td id="time3" class="evTime"></td>
+          <td id="event3" class="summary"></td>
+        </tr>
+        <tr>
+          <td id="day4"></td>
+          <td id="time4" class="evTime"></td>
+          <td id="event4" class="summary"></td>
+        </tr>
+        <tr>
+          <td id="day5"></td>
+          <td id="time5" class="evTime"></td>
+          <td id="event5" class="summary"></td>
+        </tr>
+      </table>
+    </div>
+    <div id="headlines">
+      <h4>News</h4>
+      <table id="articles">
+        <tr>
+          <td id="section1">section1</td>
+          <td id="title1" class="title">title1</td>
+        </tr>
+        <tr>
+          <td id="section2">section2</td>
+          <td id="title2" class="title">title2</td>
+        </tr>
+        <tr>
+          <td id="section3">section3</td>
+          <td id="title3" class="title">title3</td>
+        </tr>
+        <tr>
+          <td id="section4">section4</td>
+          <td id="title4" class="title">title4</td>
+        </tr>
+        <tr>
+          <td id="section5">section5</td>
+          <td id="title5" class="title">title5</td>
+        </tr>
+      </table>
     </div>
   </div>
   <div id="rightSide">
@@ -158,107 +134,360 @@
       </table>
     </div>
   </div>
-  <script>
-    function getWeather(city, code) {
-      var appID = "f94b7617ae1f162059f124c32e102e2b";
-      var link = "http://api.openweathermap.org/data/2.5/forecast?q="+city+","+code+"&units=imperial&appid="+appID;
-      $.get(link, function(weather) {
-        var currentTemp = Math.round(weather.list[0].main.temp)+"° F";
-        var currentIcon = "http://openweathermap.org/img/w/"+weather.list[0].weather[0].icon+".png";
-        var currentDes = (weather.list[0].weather[0].description);
-        document.getElementById("currentWeather").innerHTML = currentTemp+" "+currentDes;
-        document.getElementById("currentIcon").src = currentIcon;
-        var i = 1;
-        for(i=0;i<5;i++) {
-          var todayTimes = new Date(1000*weather.list[i].dt);
-          var todayHour = todayTimes.getHours();
-          var todayPeriod;
-          if(todayHour>12) {
-            todayHour = todayHour - 12;
-  					todayPeriod = "pm";
-				  }
-				  else if (todayHour===0){
-            todayHour = 12;
-  					todayPeriod = "am";
-				  }
-				  else if(todayHour===12) {
-					  todayPeriod = "pm"
-				  }
-				  else{
-					  todayPeriod = "am";
-				  }
-          var todayTime = todayHour + ":00 " + todayPeriod;
-          var todayIcon = "http://openweathermap.org/img/w/"+weather.list[i].weather[0].icon+".png";
-          var todayTemp = Math.round(weather.list[i].main.temp)+"° F";
-          //var todayWind = weather.list[i].wind.speed);
-          document.getElementById("todayTime"+i).innerHTML = todayTime;
-          document.getElementById("todayIcon"+i).src = todayIcon;
-          document.getElementById("todayTemp"+i).innerHTML = todayTemp;
-        }
-        for(i=1;i<5;i++) {
-          var todayTimes = new Date(1000*weather.list[0].dt);
-          var today = todayTimes.getDay();
-          var j=1;
-          do {
-            var tomorrowTimes = new Date(1000*weather.list[j].dt);
-            var tomorrowDay = tomorrowTimes.getDay();
-            j++;
-          } while(tomorrowDay!=((today+i)%7));
-          var weekHigh = weather.list[j].main.temp_max;
-          var weekLow = weather.list[j].main.temp_min;
-          var weekIcon = weather.list[j].weather[0].icon;
-          /*while(tomorrowDay!=((today+i+1)%7)) {
-            j++;
-            tomorrowTimes = new Date(1000*weather.list[j].dt);
-            tomorrowDay = tomorrowTimes.getDay;
-          }*/
-          //document.getElementById("weekDay2").innerHTML = "works";
-          var k;
-          for(k=1;k<8;k++) {
-            if(weekHigh<=weather.list[j+k].main.temp_max) {
-              weekHigh = weather.list[j+k].main.temp_max;
-              weekIcon = weather.list[j+k].weather[0].icon;
-            }
-            if(weekLow>weather.list[j+k].main.temp_min) {
-              weekLow = weather.list[j+k].main.temp_min;
-            }
+</body>
+<br>
+<div id="quote">
+  <p id="text">quote</p>
+  <p id="author">author</p>
+</div>
+<script>
+  var client_id = "612433509738-e8jufleests3ede3irn3pckl5ofih5ja.apps.googleusercontent.com";
+  var scopes = ["https://www.googleapis.com/auth/calendar.readonly"];
+  function strMonth(month) {
+    switch(month){
+      case 0:
+      month = "January";
+      break;
+      case 1:
+      month = "February";
+      break;
+      case 2:
+      month = "March";
+      break;
+      case 3:
+      month = "April";
+      break;
+      case 4:
+      month = "May";
+      break;
+      case 5:
+      month = "June";
+      break;
+      case 6:
+      month = "July";
+      break;
+      case 7:
+      month = "August";
+      break;
+      case 8:
+      month = "September";
+      break;
+      case 9:
+      month = "October";
+      break;
+      case 10:
+      month = "November";
+      break;
+      case 11:
+      month = "December";
+      break;
+    }
+    return month;
+  }
+  function strDay(day) {
+    switch(day){
+      case 0:
+      day = "Sunday";
+      break;
+      case 1:
+      day = "Monday";
+      break;
+      case 2:
+      day = "Tuesday";
+      break;
+      case 3:
+      day = "Wednesday";
+      break;
+      case 4:
+      day = "Thursday";
+      break;
+      case 5:
+      day = "Friday";
+      break;
+      case 6:
+      day = "Saturday";
+      break;
+    }
+    return day;
+  }
+  function checkAuth() {
+    gapi.auth.authorize(
+      {
+        'client_id' : client_id,
+        'scope' : scopes.join(' '),
+        'immediate' : true
+      }, handleAuthResult);
+  }
+  function handleAuthResult(authResult) {
+    var authorizeDiv = document.getElementById('authorize-div');
+    if (authResult && !authResult.error) {
+      authorizeDiv.style.display = 'none';
+      loadCalendarApi();
+    }
+    else {
+      authorizeDiv.style.display = 'inline';
+    }
+  }
+  function handleAuthClick(event) {
+    gapi.auth.authorize(
+      {client_id: client_id, scope: scopes, immediate: false},
+      handleAuthResult);
+    return false;
+  }
+  function loadCalendarApi() {
+    gapi.client.load('calendar', 'v3', listUpcomingEvents);
+  }
+  function listUpcomingEvents() {
+    var request = gapi.client.calendar.events.list({
+      'calendarId': 'primary',
+      'timeMin': (new Date()).toISOString(),
+      'showDeleted': false,
+      'singleEvents': true,
+      'maxResults': 5,
+      'orderBy': 'startTime'
+    });
+
+    request.execute(function(resp) {
+      var events = resp.items;
+      //appendPre('Upcoming events:');
+
+      if (events.length > 0) {
+        for (i = 0; i < events.length; i++) {
+          var event = events[i];
+          var when = event.start.dateTime;
+          var allDay = 0;
+          if (!when) {
+            when = event.start.date;
+            allDay = 1;
           }
-          switch(tomorrowDay){
-            case 0:
-            tomorrowDay = "Sunday";
-            break;
-            case 1:
-            tomorrowDay = "Monday";
-            break;
-            case 2:
-            tomorrowDay = "Tuesday";
-            break;
-            case 3:
-            tomorrowDay = "Wednesday";
-            break;
-            case 4:
-            tomorrowDay = "Thursday";
-            break;
-            case 5:
-            tomorrowDay = "Friday";
-            break;
-            case 6:
-            tomorrowDay = "Saturday";
-            break;
+          var daySlot = "day" + (i+1);
+          var timeSlot = "time" + (i+1);
+          var eventSlot = "event" + (i+1);
+          when = new Date(when);
+          var eventDate = when.getDate();
+          var eventMonth = when.getMonth();
+          var eventYear = when.getFullYear();
+          var eventTime = eventMonth + " " + eventDate + " " + eventYear;
+          var curr = new Date();
+          var currMonth = curr.getMonth();
+          var currDate = curr.getDate();
+          var currYear = curr.getFullYear();
+          var currTime = currMonth + " " + currDate + " " + currYear;
+          var millDay = 86400000;
+          var millWeek = 604800000;
+          var eventSec = when.getTime();
+          eventSec = eventSec - (eventSec%millDay);
+          var currSec = curr.getTime();
+          currSec = currSec - (currSec%millDay)
+          if (eventTime === currTime){
+            document.getElementById(daySlot).innerHTML = "Today";
           }
-          var weekDay = tomorrowDay;
-          var weekIcon = "http://openweathermap.org/img/w/"+weekIcon+".png";
-          var weekHigh = Math.round(weekHigh)+"° F ";
-          var weekLow = Math.round(weekLow)+"° F";
-          document.getElementById("weekDay"+i).innerHTML = weekDay;
-          document.getElementById("weekIcon"+i).src = weekIcon;
-          document.getElementById("weekHigh"+i).innerHTML = weekHigh;
-          document.getElementById("weekLow"+i).innerHTML = weekLow;
+          else if ((eventSec-currSec)===millDay){
+            document.getElementById(daySlot).innerHTML = "Tomorrow";
+          }
+          else if ((eventSec-currSec)<millWeek) {
+            document.getElementById(daySlot).innerHTML = strDay(when.getDay());
+          }
+          else if (eventYear === currYear) {
+            document.getElementById(daySlot).innerHTML = strMonth(eventMonth) + " " + eventDate;
+          }
+          else {
+            document.getElementById(daySlot).innerHTML = eventTime;
+          }
+          if (allDay === 1) {
+            document.getElementById(timeSlot).innerHTML = "All Day";
+          }
+          else {
+            var eventHour = when.getHours();
+            var eventMinute = when.getMinutes();
+            var eventNote;
+            if(eventHour>=12){
+              eventNote = "PM";
+            }
+            else{
+              eventNote = "AM";
+            }
+            if(eventHour>12){
+                eventHour = eventHour - 12;
+            }
+            else if (eventHour===0){
+              eventHour = 12;
+            }
+            if(eventMinute<10){
+              eventMinute = "0" + eventMinute
+            }
+            var over = event.end.dateTime;
+            var over = new Date(over);
+            var overHour = over.getHours();
+            var overMinute = over.getMinutes();
+            var overNote;
+            if(overHour>=12){
+              overNote = "PM";
+            }
+            else{
+              overNote = "AM";
+            }
+            if(overHour>12){
+                overHour = overHour - 12;
+            }
+            else if (overHour===0){
+              overHour = 12;
+            }
+            if(overMinute<10){
+              overMinute = "0" + overMinute
+            }
+            var eventTime = eventHour + ":" + eventMinute + " " + eventNote;
+            var overTime = overHour + ":" + overMinute + " " + overNote;
+            document.getElementById(timeSlot).innerHTML = eventTime + " - " + overTime;
+          }
+          document.getElementById(eventSlot).innerHTML = event.summary;
         }
-      }, "jsonp");
-    };
-  </script>
-  <script>
+      } else {
+        document.getElementById("eventsLabel").innerHTML = "There are no upcoming events.";
+        //appendPre('No upcoming events found.');
+      }
+
+    });
+  }
+  function appendPre(message) {
+    var pre = document.getElementById('output');
+    var textContent = document.createTextNode(message + '\n');
+    pre.appendChild(textContent);
+  }
+  function getQuote() {
+    $.getJSON("http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&callback=", function(a) {
+      //$("body").append(a[0].content + "<p>&mdash; " + a[0].title + "</p>")
+      document.getElementById("text").innerHTML = a[0].content;
+      document.getElementById("author").innerHTML = ("—" + a[0].title);
+    });
+    /*$getJSON("http://api.forismatic.com/api/1.0/method=getQuote&key=457653&format=jsonp&lang=en", function(a) {
+      document.getElementById("text").innerHTML = "a.forismatic.quote.quotetext";
+    });*/
+  };
+  function getNews() {
+    var url = "https://api.nytimes.com/svc/topstories/v1/national.json";
+    url += '?' + $.param({
+      'api-key': "61b90f55247e464392decae3f3b7aa8f"
+    });
+    $.ajax({
+      url: url,
+      method: 'GET',
+    }).done(function(result) {
+      //console.log(result);
+      document.getElementById("section1").innerHTML = (result.results[0].section + " " + result.results[0].subsection);
+      document.getElementById("title1").innerHTML = result.results[0].title;
+      document.getElementById("section2").innerHTML = (result.results[1].section + " " + result.results[1].subsection);
+      document.getElementById("title2").innerHTML = result.results[1].title;
+      document.getElementById("section3").innerHTML = (result.results[2].section + " " + result.results[2].subsection);
+      document.getElementById("title3").innerHTML = result.results[2].title;
+      document.getElementById("section4").innerHTML = (result.results[3].section + " " + result.results[3].subsection);
+      document.getElementById("title4").innerHTML = result.results[3].title;
+      document.getElementById("section5").innerHTML = (result.results[4].section + " " + result.results[4].subsection);
+      document.getElementById("title5").innerHTML = result.results[4].title;
+    }).fail(function(err) {
+      throw err;
+    });
+    //document.getElementById("section1").innerHTML = result.num_results;
+  };
+  function getWeather(city, code) {
+    var appID = "f94b7617ae1f162059f124c32e102e2b";
+    var link = "http://api.openweathermap.org/data/2.5/forecast?q="+city+","+code+"&units=imperial&appid="+appID;
+    $.get(link, function(weather) {
+      var currentTemp = Math.round(weather.list[0].main.temp)+"° F";
+      var currentIcon = "http://openweathermap.org/img/w/"+weather.list[0].weather[0].icon+".png";
+      var currentDes = (weather.list[0].weather[0].description);
+      document.getElementById("currentWeather").innerHTML = currentTemp+" "+currentDes;
+      document.getElementById("currentIcon").src = currentIcon;
+      var i = 1;
+      for(i=0;i<5;i++) {
+        var todayTimes = new Date(1000*weather.list[i].dt);
+        var todayHour = todayTimes.getHours();
+        var todayPeriod;
+        if(todayHour>12) {
+          todayHour = todayHour - 12;
+          todayPeriod = "pm";
+        }
+        else if (todayHour===0){
+          todayHour = 12;
+          todayPeriod = "am";
+        }
+        else if(todayHour===12) {
+          todayPeriod = "pm"
+        }
+        else{
+          todayPeriod = "am";
+        }
+        var todayTime = todayHour + ":00 " + todayPeriod;
+        var todayIcon = "http://openweathermap.org/img/w/"+weather.list[i].weather[0].icon+".png";
+        var todayTemp = Math.round(weather.list[i].main.temp)+"° F";
+        //var todayWind = weather.list[i].wind.speed);
+        document.getElementById("todayTime"+i).innerHTML = todayTime;
+        document.getElementById("todayIcon"+i).src = todayIcon;
+        document.getElementById("todayTemp"+i).innerHTML = todayTemp;
+      }
+      for(i=1;i<5;i++) {
+        var todayTimes = new Date(1000*weather.list[0].dt);
+        var today = todayTimes.getDay();
+        var j=1;
+        do {
+          var tomorrowTimes = new Date(1000*weather.list[j].dt);
+          var tomorrowDay = tomorrowTimes.getDay();
+          j++;
+        } while(tomorrowDay!=((today+i)%7));
+        var weekHigh = weather.list[j].main.temp_max;
+        var weekLow = weather.list[j].main.temp_min;
+        var weekIcon = weather.list[j].weather[0].icon;
+        /*while(tomorrowDay!=((today+i+1)%7)) {
+          j++;
+          tomorrowTimes = new Date(1000*weather.list[j].dt);
+          tomorrowDay = tomorrowTimes.getDay;
+        }*/
+        //document.getElementById("weekDay2").innerHTML = "works";
+        var k;
+        for(k=1;k<8;k++) {
+          if(weekHigh<=weather.list[j+k].main.temp_max) {
+            weekHigh = weather.list[j+k].main.temp_max;
+            weekIcon = weather.list[j+k].weather[0].icon;
+          }
+          if(weekLow>weather.list[j+k].main.temp_min) {
+            weekLow = weather.list[j+k].main.temp_min;
+          }
+        }
+        switch(tomorrowDay){
+          case 0:
+          tomorrowDay = "Sunday";
+          break;
+          case 1:
+          tomorrowDay = "Monday";
+          break;
+          case 2:
+          tomorrowDay = "Tuesday";
+          break;
+          case 3:
+          tomorrowDay = "Wednesday";
+          break;
+          case 4:
+          tomorrowDay = "Thursday";
+          break;
+          case 5:
+          tomorrowDay = "Friday";
+          break;
+          case 6:
+          tomorrowDay = "Saturday";
+          break;
+        }
+        var weekDay = tomorrowDay;
+        var weekIcon = "http://openweathermap.org/img/w/"+weekIcon+".png";
+        var weekHigh = Math.round(weekHigh)+"° F ";
+        var weekLow = Math.round(weekLow)+"° F";
+        document.getElementById("weekDay"+i).innerHTML = weekDay;
+        document.getElementById("weekIcon"+i).src = weekIcon;
+        document.getElementById("weekHigh"+i).innerHTML = weekHigh;
+        document.getElementById("weekLow"+i).innerHTML = weekLow;
+      }
+    }, "jsonp");
+  };
+  function getLocation() {
     $.get("http://ipinfo.io", function(response) {
       var appID = "f94b7617ae1f162059f124c32e102e2b";
       var city = response.city;
@@ -268,6 +497,70 @@
       var code = response.country;
       getWeather(city, code);
     }, "jsonp");
-  </script>
-</body>
+  };
+  function getTime() {
+    var times = new Date();
+    var hour = times.getHours();
+    var minute = times.getMinutes();
+    if(hour>12){
+        hour = hour - 12;
+    }
+    else if (hour===0){
+      hour = 12;
+    }
+    if(minute<10){
+      minute = "0" + minute
+    }
+    var hm = hour + ":" + minute;
+    var currentHour = document.getElementById("time").innerHTML;
+    currentHour = currentHour.substring(0,2);
+    if (currentHour != hm.substring(0,2)){
+      //loadCalendarApi();
+      //handleAuthResult();
+      getLocation();
+    }
+    //loadCalendarApi();
+    if ((hour === 6)&&(currentHour === "5")){
+      getNews();
+    }
+    else if ((hour === 12)&&(currentHour === "11")) {
+      getNews();
+    }
+    var currentMinute = document.getElementById("time").innerHTML;
+    currentMinute = currentMinute.substr(currentMinute.length-2);
+    //document.getElementById("test").innerHTML = currentHour;
+    if ((minute === 15)&&(currentMinute === "14")){
+      //get reminders and repeat for 00, 30, and 45
+      //loadCalendarApi();
+    }
+    else if ((minute === 30)&&(currentMinute === "29")) {
+      //loadCalendarApi();
+    }
+    else if ((minute === 45)&&(currentMinute === "44")) {
+      //loadCalendarApi();
+      //handleAuthResult();
+    }
+    var day = times.getDay();
+    day = strDay(day);
+    var month = times.getMonth();
+    month = strMonth(month);
+    var date = times.getDate();
+    var year = times.getFullYear();
+    var fullDate = day + ", " + month + " " + date + " " + year;
+    if ((fullDate != document.getElementById("date").innerHTML)&&(document.getElementById("time").innerHTML != "Time")){
+      location.reload();
+    }
+    document.getElementById("time").innerHTML = hm;
+    document.getElementById("date").innerHTML = fullDate;
+  };
+  getTime();
+  getLocation();
+  getNews();
+  getQuote();
+  setInterval(function() {
+    getTime();
+  }, 5000);
+</script>
+<script src="https://apis.google.com/js/client.js?onload=checkAuth">
+</script>
 </html>

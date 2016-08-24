@@ -1,0 +1,102 @@
+// Place all the styles related to the Mirror controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+//@import "bootstrap-sprockets";
+//@import "bootstrap";
+
+html {
+  background-color: black
+}
+
+.black {
+  background-color: black;
+}
+
+head {
+  text-align: center;
+  color: white;
+}
+
+#schedule {
+  text-align: center;
+}
+
+#top {
+  text-align: center;
+}
+
+#time {
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  font-size: 50px;
+  width: auto;
+  border-color: white;
+  border-style: groove;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+body {
+  color: white;
+}
+
+.summary {
+  padding-left: 30px;
+}
+
+.evTime {
+  padding-left: 30px;
+}
+
+#quote {
+  float: center;
+  width: 600px;
+  //margin-top: 1000px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  margin-left: -300px
+}
+
+#text {
+  text-align: center;
+}
+
+#author {
+  text-align: center;
+}
+
+#leftSide {
+  float: left;
+  text-align: center;
+  margin-left: 100px;
+}
+
+#rightSide {
+  float: right;
+  text-align: center;
+  padding-right: 100px;
+}
+
+.high {
+  color: red;
+  padding-right: 5px;
+}
+
+.low {
+  color: blue;
+}
+
+.title {
+  padding-bottom: 10px;
+  padding-left: 30px;
+}
+
+#home {
+  padding-top: 50px;
+  text-align: center;
+  color: white;
+  background-color: black;
+}
