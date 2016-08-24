@@ -141,7 +141,7 @@
   <p id="author">author</p>
 </div>
 <script>
-  var client_id = "612433509738-e8jufleests3ede3irn3pckl5ofih5ja.apps.googleusercontent.com";
+  var client_id = "<%= getClientID %>";
   var scopes = ["https://www.googleapis.com/auth/calendar.readonly"];
   function strMonth(month) {
     switch(month){
@@ -390,7 +390,8 @@
     //document.getElementById("section1").innerHTML = result.num_results;
   };
   function getWeather(city, code) {
-    var appID = "f94b7617ae1f162059f124c32e102e2b";
+    var appID = "<%= getWeatherID() %>";
+    console.log(appID);
     var link = "http://api.openweathermap.org/data/2.5/forecast?q="+city+","+code+"&units=imperial&appid="+appID;
     $.get(link, function(weather) {
       var currentTemp = Math.round(weather.list[0].main.temp)+"° F";
