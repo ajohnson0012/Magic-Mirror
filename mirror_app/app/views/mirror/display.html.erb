@@ -260,10 +260,16 @@
             when = event.start.date;
             allDay = 1;
           }
+          var millDay = 86400000;
+          var millWeek = 604800000;
           var daySlot = "day" + (i+1);
           var timeSlot = "time" + (i+1);
           var eventSlot = "event" + (i+1);
           when = new Date(when);
+          if (allDay === 1) {
+            var newWhen = when.getTime() + millDay;
+            when = new Date(newWhen);
+          }
           var eventDate = when.getDate();
           var eventMonth = when.getMonth();
           var eventYear = when.getFullYear();
@@ -273,8 +279,6 @@
           var currDate = curr.getDate();
           var currYear = curr.getFullYear();
           var currTime = currMonth + " " + currDate + " " + currYear;
-          var millDay = 86400000;
-          var millWeek = 604800000;
           var eventSec = when.getTime();
           eventSec = eventSec - (eventSec%millDay);
           var currSec = curr.getTime();
@@ -391,7 +395,6 @@
   };
   function getWeather(city, code) {
     var appID = "<%= getWeatherID() %>";
-    console.log(appID);
     var link = "http://api.openweathermap.org/data/2.5/forecast?q="+city+","+code+"&units=imperial&appid="+appID;
     $.get(link, function(weather) {
       var currentTemp = Math.round(weather.list[0].main.temp)+"° F";
@@ -516,11 +519,15 @@
     var currentHour = document.getElementById("time").innerHTML;
     currentHour = currentHour.substring(0,2);
     if (currentHour != hm.substring(0,2)){
-      //loadCalendarApi();
-      //handleAuthResult();
       getLocation();
     }
+    //handleAuthResult();
+    //checkAuth();
     //loadCalendarApi();
+    //handleAuthClick(event);
+    //reloadCalendar();
+    //reAuth();
+    //listUpcomingEvents();
     if ((hour === 6)&&(currentHour === "5")){
       getNews();
     }
